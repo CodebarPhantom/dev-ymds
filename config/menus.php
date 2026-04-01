@@ -6,13 +6,13 @@ return
 
     [
         'main_menu' => [
-            [
-                'title' => 'Beranda',
-                'icon' => 'ki-filled ki-element-11',
-                'permission' => null,
-                'route' => 'dashboard',
-                'pathUrl' => ['/dashboard', 'dashboard']
-            ],
+            // [
+            //     'title' => 'Beranda',
+            //     'icon' => 'ki-filled ki-element-11',
+            //     'permission' => null,
+            //     'route' => 'dashboard',
+            //     'pathUrl' => ['/dashboard', 'dashboard']
+            // ],
             [
                 'title' => 'Konfirmasi Pembayaran',
                 'icon' => 'ki-filled ki-element-11',

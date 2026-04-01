@@ -44,32 +44,6 @@ class AppServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             if (Auth::check()) {
                 $user = Auth::user();
-
-                // Load the notifications eagerly
-                // $user->load([
-                //     'latestNotificationAlls',
-                //     'latestNotificationForMe',
-                //     'latestNotificationDepartment',
-                // ]);
-
-                // $notificationAlls = $user->latestNotificationAlls;
-                // $notificationForMe = $user->latestNotificationForMe;
-                // $notificationDepartment = $user->latestNotificationDepartment;
-
-                // $hasUnreadNotificationAlls = $notificationAlls->contains('is_read', false);
-                // $hasNotificationForMe  = $notificationForMe->contains('is_read', false);
-                // $hasNotificationDepartment = $notificationDepartment->contains('is_read', false);
-
-
-                // // Pass the limited notifications to all views
-                // $view->with('notificationAlls', $notificationAlls);
-                // $view->with('notificationForMes',  $notificationForMe);
-                // $view->with('notificationDepartments', $notificationDepartment);
-                // $view->with('hasUnreadNotificationAlls', $hasUnreadNotificationAlls);
-                // $view->with('hasNotificationForMe',$hasNotificationForMe);
-                // $view->with('hasNotificationDepartment', $hasNotificationDepartment);
-
-
             }
         });
 

@@ -3,14 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Web\LocationController;
-use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\PermissionController;
 use App\Http\Controllers\Web\PermissionGroupController;
 use App\Http\Controllers\Web\RoleController;
 use App\Http\Controllers\UploadsController;
-use App\Http\Controllers\Web\FormEntryController;
 use App\Http\Controllers\Web\User\UserController;
-use App\Http\Controllers\Web\SummaryController;
 use App\Http\Controllers\Web\LandingController;
 use App\Http\Controllers\Web\PaymentConfirmationController;
 
@@ -27,8 +24,6 @@ Route::get('/payment/tracking', function (Request $request) {
 
 Route::middleware(['auth'/*, 'verified'*/])->group(function () {
 
-
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('/admin/payment-confirmations')->as('admin.payment-confirmations.')->group(function () {
         Route::get('', [PaymentConfirmationController::class, 'index'])->name('index');
@@ -80,28 +75,6 @@ Route::middleware(['auth'/*, 'verified'*/])->group(function () {
         Route::get('/{users}', [UserController::class, 'show'])->name('show');
         Route::get('/{users}/edit', [UserController::class, 'edit'])->name('edit');
         Route::put('/{users}', [UserController::class, 'update'])->name('update');
-    });
-
-    Route::prefix("/forms")->as("forms.")->group(function () {
-        Route::get('/{formCode}/create', [FormEntryController::class, 'create'])
-            ->name('create');
-        Route::post('/{formCode}/store', [FormEntryController::class, 'store'])
-            ->name('store');
-
-        // Alias khusus untuk form tertentu
-        Route::get('/tahsin-tilawah/create', [FormEntryController::class, 'create'])
-            ->defaults('formCode', 'tahsin-tilawah')
-            ->name('create.tahsin-tilawah');
-
-        Route::get('/tahsin-tilawah/store', [FormEntryController::class, 'store'])
-            ->defaults('formCode', 'tahsin-tilawah')
-            ->name('store.tahsin-tilawah');
-    });
-
-    Route::prefix("/summaries")->as("summaries.")->group(function () {
-        Route::get('{formCode}', [SummaryController::class, 'index'])->name('index');
-        Route::get('{formCode}/{entryId}', [SummaryController::class, 'show'])->name('show');
-
     });
 
     Route::get('/uploads/{path}', UploadsController::class)->where('path', '.*');

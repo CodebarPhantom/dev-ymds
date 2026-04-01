@@ -8,8 +8,6 @@ use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\LocationController;
-use App\Http\Controllers\Api\V1\FormEntryController;
-use App\Http\Controllers\Api\V1\SummaryController;
 use App\Http\Controllers\Api\V1\PaymentConfirmationController;
 
 // Route::post('/signin', function (Request $request) {
@@ -65,19 +63,6 @@ Route::as("api.")->group(function () {
                 Route::get('/datatable', [UserController::class, 'dataTable'])->name('datatable');
                 Route::get('/get-combobox', [UserController::class, 'getCombobox'])->name('get-combobox');
 
-            });
-
-            Route::prefix("/forms")->as("forms.")->group(function () {
-                Route::post('/{formCode}/store', [FormEntryController::class, 'store'])
-                    ->name('store');
-
-                Route::get('/tahsin-tilawah/store', [FormEntryController::class, 'store'])
-                    ->defaults('formCode', 'tahsin-tilawah')
-                    ->name('store.tahsin-tilawah');
-            });
-
-            Route::prefix('/summaries')->as('summaries.')->group(function () {
-                Route::get('/datatable', [SummaryController::class, 'dataTable'])->name('datatable');
             });
 
             Route::prefix('/payment-confirmations')->as('payment-confirmations.')->group(function () {
