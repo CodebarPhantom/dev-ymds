@@ -1,0 +1,683 @@
+<html lang="id"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rumio - Komunitas Modern</title>
+    <meta name="description" content="Platform pembayaran iuran RT untuk komunitas modern">
+
+    <link rel="icon" type="image/png" href="https://z-cdn-media.chatglm.cn/files/5b24cbda-9dff-4f4a-844f-dc7ac3606ddb.png?auth_key=1865273668-5065ddde6f5b48c69831bdb1f5720fdc-0-39f87db3f1bcda3a209dfdc771521856">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                        'quicksand': ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#10b981',
+                        accent: '#8b5cf6',
+                        dark: '#1e293b',
+                        light: '#f8fafc',
+                        rumioBlue: '#3b82f6',
+                        rumioGreen: '#10b981',
+                    },
+                    animation: {
+                        'float-slow': 'float 8s ease-in-out infinite',
+                        'bounce-gentle': 'bounceGentle 4s ease-in-out infinite',
+                        'wiggle': 'wiggle 2s ease-in-out infinite',
+                        'pulse-subtle': 'pulseSubtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        },
+                        bounceGentle: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        },
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' },
+                        },
+                        pulseSubtle: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.8' },
+                        }
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #fefefe;
+            color: #1e293b;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Custom Background Pattern */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fefefe;
+            background-image:
+                radial-gradient(#3b82f6 1px, transparent 1px),
+                radial-gradient(#10b981 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            opacity: 0.05;
+            z-index: -1;
+        }
+
+        /* Colorful Shapes */
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: #3b82f6;
+            top: 10%;
+            right: 5%;
+            animation: float-slow 8s infinite ease-in-out;
+        }
+
+        .shape-2 {
+            width: 250px;
+            height: 250px;
+            background: #10b981;
+            bottom: 15%;
+            left: 5%;
+            animation: float-slow 8s infinite ease-in-out;
+            animation-delay: 2s;
+        }
+
+        .shape-3 {
+            width: 200px;
+            height: 200px;
+            background: #8b5cf6;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: float-slow 8s infinite ease-in-out;
+            animation-delay: 4s;
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #10b981);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Icon Box */
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            color: white;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover .icon-box {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Tab Styles */
+        .tab-container {
+            display: flex;
+            gap: 8px;
+            background: #f8fafc;
+            padding: 6px;
+            border-radius: 16px;
+            position: relative;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-weight: 500;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .tab-button.active {
+            color: white;
+        }
+
+        .tab-indicator {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            height: calc(100% - 12px);
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Bank Card Styles */
+        .bank-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .bank-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #10b981);
+        }
+
+        .bank-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Contact Chip */
+        .contact-chip {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f1f5f9;
+        }
+
+        .contact-chip:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border-color: #3b82f6;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: white;
+            border-radius: 50px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+            border: 1px solid #f1f5f9;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Header Animation */
+        .logo-container {
+            animation: bounce-gentle 4s ease-in-out infinite;
+        }
+
+        /* Decorative Elements */
+        .deco-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .deco-circle-1 {
+            width: 120px;
+            height: 120px;
+            top: -30px;
+            right: -30px;
+        }
+
+        .deco-circle-2 {
+            width: 80px;
+            height: 80px;
+            bottom: -20px;
+            left: -20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Pattern -->
+    <div class="bg-pattern"></div>
+
+    <!-- Decorative Shapes -->
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+
+    <!-- Main Container -->
+    <div class="min-h-screen flex flex-col items-center justify-center p-4">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <div class="logo-container inline-block p-6 bg-white rounded-3xl mb-6 relative shadow-lg">
+                <div class="deco-circle deco-circle-1"></div>
+                <div class="deco-circle deco-circle-2"></div>
+                <img src="https://z-cdn-media.chatglm.cn/files/5b24cbda-9dff-4f4a-844f-dc7ac3606ddb.png?auth_key=1865273668-5065ddde6f5b48c69831bdb1f5720fdc-0-39f87db3f1bcda3a209dfdc771521856" alt="Logo Rumio" class="w-24 h-24 object-contain relative z-10">
+            </div>
+            <h1 class="text-5xl md:text-6xl font-bold font-quicksand mb-2" style="background: linear-gradient(135deg, #3b82f6, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                Rumio
+            </h1>
+            <p class="text-xl text-gray-600 mb-4 font-quicksand">Komunitas Modern</p>
+            <div class="inline-flex items-center gap-2 px-6 py-3 bg-white rounded-full text-sm font-medium shadow-md">
+                <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                <span>Simple • Friendly • Efficient</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="w-full max-w-2xl">
+            <!-- Block Selection -->
+            <section class="mb-10">
+                <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 font-poppins">
+                    <span class="w-1 h-8 bg-gradient-to-b from-blue-500 to-green-500 rounded-full"></span>
+                    Pilih Blok Anda
+                </h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="card p-6 cursor-pointer">
+                        <div class="flex flex-col items-center">
+                            <div class="icon-box mb-4">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-1 font-quicksand">Blok A1</h3>
+                            <p class="text-sm text-gray-500">24 Unit</p>
+                        </div>
+                    </div>
+                    <div class="card p-6 cursor-pointer">
+                        <div class="flex flex-col items-center">
+                            <div class="icon-box mb-4">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-1 font-quicksand">Blok A2</h3>
+                            <p class="text-sm text-gray-500">24 Unit</p>
+                        </div>
+                    </div>
+                    <div class="card p-6 cursor-pointer">
+                        <div class="flex flex-col items-center">
+                            <div class="icon-box mb-4">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-1 font-quicksand">Blok B1</h3>
+                            <p class="text-sm text-gray-500">18 Unit</p>
+                        </div>
+                    </div>
+                    <div class="card p-6 cursor-pointer">
+                        <div class="flex flex-col items-center">
+                            <div class="icon-box mb-4">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-1 font-quicksand">Blok B2</h3>
+                            <p class="text-sm text-gray-500">18 Unit</p>
+                        </div>
+                    </div>
+                    <div class="card p-6 cursor-pointer col-span-2">
+                        <div class="flex flex-col items-center">
+                            <div class="icon-box mb-4">
+                                <i class="fas fa-city"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-1 font-quicksand">Blok C</h3>
+                            <p class="text-sm text-gray-500">30 Unit</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Payment Options -->
+            <section class="mb-10">
+                <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 font-poppins">
+                    <span class="w-1 h-8 bg-gradient-to-b from-blue-500 to-green-500 rounded-full"></span>
+                    Informasi Pembayaran
+                </h2>
+
+                <!-- Tabs -->
+                <div class="tab-container mb-6">
+                    <div class="tab-indicator" id="tabIndicator"></div>
+                    <button class="tab-button active" onclick="switchTab('rt')">Bendahara RT</button>
+                    <button class="tab-button" onclick="switchTab('mosque')">Rekening Masjid</button>
+                </div>
+
+                <!-- RT Treasurer Content -->
+                <div id="rtContent" class="space-y-4">
+                    <div class="bank-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center">
+                                    <i class="fas fa-university text-blue-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm text-gray-500">Bendahara 1</div>
+                                    <div class="text-xl font-semibold font-quicksand">BCA</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm text-gray-500">A/n</div>
+                                <div class="font-semibold font-quicksand">Ahmad Fauzi</div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-4">
+                            <div class="flex items-center justify-between gap-3">
+                                <div class="font-mono text-xl">1234567890</div>
+                                <button onclick="copyToClipboard('1234567890', 'BCA')" class="btn btn-primary">
+                                    <i class="bi bi-clipboard"></i> Salin
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bank-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-2xl bg-green-100 flex items-center justify-center">
+                                    <i class="fas fa-university text-green-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm text-gray-500">Bendahara 2</div>
+                                    <div class="text-xl font-semibold font-quicksand">Mandiri</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm text-gray-500">A/n</div>
+                                <div class="font-semibold font-quicksand">Siti Nurhaliza</div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-4">
+                            <div class="flex items-center justify-between gap-3">
+                                <div class="font-mono text-xl">9876543210</div>
+                                <button onclick="copyToClipboard('9876543210', 'Mandiri')" class="btn btn-primary">
+                                    <i class="bi bi-clipboard"></i> Salin
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mosque Content -->
+                <div id="mosqueContent" class="space-y-4 hidden">
+                    <div class="bank-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-2xl bg-purple-100 flex items-center justify-center">
+                                    <i class="fas fa-mosque text-purple-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm text-gray-500">Rekening Masjid</div>
+                                    <div class="text-xl font-semibold font-quicksand">BSI</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm text-gray-500">A/n</div>
+                                <div class="font-semibold font-quicksand">MASJID AL-HIKMAH</div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-4">
+                            <div class="flex items-center justify-between gap-3">
+                                <div class="font-mono text-xl">4567891230</div>
+                                <button onclick="copyToClipboard('4567891230', 'BSI')" class="btn btn-primary">
+                                    <i class="bi bi-clipboard"></i> Salin
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-3 text-xs text-gray-500 flex items-center gap-2">
+                            <i class="fas fa-info-circle"></i> Kode Bank: 451
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2 font-quicksand">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            Konfirmasi Pembayaran
+                        </h3>
+                        <div class="space-y-3">
+                            <a href="https://wa.me/6281234567890" target="_blank" class="contact-chip flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                                        <i class="fab fa-whatsapp text-green-500 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-semibold font-quicksand">Ustadz Rahman</div>
+                                        <div class="text-sm text-gray-500">0812-3456-7890</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-arrow-right text-green-500"></i>
+                            </a>
+
+                            <a href="https://wa.me/6289876543210" target="_blank" class="contact-chip flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                                        <i class="fab fa-whatsapp text-green-500 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-semibold font-quicksand">Ustadz Hasan</div>
+                                        <div class="text-sm text-gray-500">0898-7654-3210</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-arrow-right text-green-500"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Admin Contact -->
+            <section>
+                <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 font-poppins">
+                    <span class="w-1 h-8 bg-gradient-to-b from-blue-500 to-green-500 rounded-full"></span>
+                    Hubungi Admin
+                </h2>
+                <div class="card p-6">
+                    <div class="space-y-3">
+                        <a href="https://wa.me/6281112233444?text=Halo%20saya%20ingin%20membayar%20iuran%20RT" target="_blank" class="contact-chip flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                                    <i class="fab fa-whatsapp text-blue-500 text-xl"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold font-quicksand">WhatsApp Admin</div>
+                                    <div class="text-sm text-gray-500">6281112233444</div>
+                                </div>
+                            </div>
+                            <i class="fas fa-arrow-right text-blue-500"></i>
+                        </a>
+
+                        <a href="mailto:admin@rumio.id" class="contact-chip flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                                    <i class="fas fa-envelope text-green-500 text-xl"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold font-quicksand">Email Admin</div>
+                                    <div class="text-sm text-gray-500">admin@rumio.id</div>
+                                </div>
+                            </div>
+                            <i class="fas fa-arrow-right text-green-500"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-600 text-sm">
+            <p>© 2024 Rumio. Komunitas Modern.</p>
+            <p class="text-xs mt-1 text-gray-500">Membangun komunitas yang lebih baik</p>
+        </footer>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle text-green-500 text-xl"></i>
+        <span id="toastMessage" class="font-medium"></span>
+    </div>
+
+    <script>
+        // Tab Switching
+        function switchTab(tab) {
+            const rtContent = document.getElementById('rtContent');
+            const mosqueContent = document.getElementById('mosqueContent');
+            const tabIndicator = document.getElementById('tabIndicator');
+            const tabButtons = document.querySelectorAll('.tab-button');
+
+            if (tab === 'rt') {
+                rtContent.classList.remove('hidden');
+                mosqueContent.classList.add('hidden');
+                tabIndicator.style.width = '50%';
+                tabIndicator.style.left = '0';
+                tabButtons[0].classList.add('active');
+                tabButtons[1].classList.remove('active');
+            } else {
+                rtContent.classList.add('hidden');
+                mosqueContent.classList.remove('hidden');
+                tabIndicator.style.width = '50%';
+                tabIndicator.style.left = '50%';
+                tabButtons[1].classList.add('active');
+                tabButtons[0].classList.remove('active');
+            }
+        }
+
+        // Copy to Clipboard
+        function copyToClipboard(text, bankName) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(`✓ No. Rekening ${bankName} disalin!`);
+            }).catch(err => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast(`✓ No. Rekening ${bankName} disalin!`);
+            });
+        }
+
+        // Show Toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize tab indicator position
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabIndicator = document.getElementById('tabIndicator');
+            tabIndicator.style.width = '50%';
+            tabIndicator.style.left = '0';
+        });
+
+        // Add click handlers to block cards
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function() {
+                const blockName = this.querySelector('h3').textContent;
+                showToast(`✓ ${blockName} dipilih`);
+            });
+        });
+    </script>
+</body>
+</html>
