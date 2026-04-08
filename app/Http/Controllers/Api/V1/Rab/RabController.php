@@ -59,7 +59,10 @@ class RabController extends MasterController
                 'can_edit'                       => $rab->isEditable() && Gate::check('updatePolicy', $rab),
                 'can_submit'                     => $rab->isSubmittable() && Gate::check('cancelPolicy', $rab),
                 'can_cancel'                     => $rab->isCancellable() && Gate::check('cancelPolicy', $rab),
-                'can_approve'                    => Gate::check('approvePolicy', $rab),
+                'can_approve'                    => Gate::check('approvePolicy', $rab) && (
+                    ($rab->status->value === 'PENDING_BENDAHARA' && auth()->user()->hasRole('bendahara_umum')) ||
+                    ($rab->status->value === 'PENDING_KETUA' && auth()->user()->hasRole('ketua_yayasan'))
+                ),
             ];
         });
 

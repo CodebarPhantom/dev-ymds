@@ -29,46 +29,6 @@
 
     @include('partials.attention')
 
-    <!-- Filter Section -->
-    <div class="container-fixed pb-4">
-        <div class="card">
-            <div class="card-body">
-                <div class="flex flex-wrap gap-3 items-end">
-                    <div class="flex flex-col gap-1">
-                        <label class="text-xs font-medium text-gray-600">Status</label>
-                        <select id="filter-status" class="select select-sm w-48">
-                            <option value="">Semua Status</option>
-                            <option value="DRAFT">Draft</option>
-                            <option value="PENDING_BENDAHARA">Menunggu Bendahara</option>
-                            <option value="REJECTED_BENDAHARA">Ditolak Bendahara</option>
-                            <option value="PENDING_KETUA">Menunggu Ketua</option>
-                            <option value="REJECTED_KETUA">Ditolak Ketua</option>
-                            <option value="APPROVED">Disetujui</option>
-                            <option value="CANCELLED">Dibatalkan</option>
-                        </select>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <label class="text-xs font-medium text-gray-600">Bulan</label>
-                        <input id="filter-bulan" class="input input-sm w-40" type="month" placeholder="Bulan">
-                    </div>
-                    @auth
-                        @hasrole('bendahara_umum|ketua_yayasan')
-                            <div class="flex flex-col gap-1">
-                                <label class="text-xs font-medium text-gray-600">Divisi</label>
-                                <input id="filter-divisi" class="input input-sm w-40" type="text" placeholder="Nama divisi">
-                            </div>
-                        @endhasrole
-                    @endauth
-                    <button id="apply-filter-btn" class="btn btn-sm btn-primary">
-                        <i class="ki-filled ki-filter"></i>Filter
-                    </button>
-                    <button id="reset-filter-btn" class="btn btn-sm btn-light">
-                        Reset
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="container-fixed">
         <div class="grid pb-7.5">
@@ -168,8 +128,8 @@
         const apiUrl = '{{ route('api.v1.rab.datatable') }}';
         const element = document.querySelector('#kt_rab_table');
 
-        let activeFilters = { status: '', bulan: '', divisi_id: '' };
-        let pendingRejectId = null;
+        let activeFilters = {};
+
 
         const columns = {
             nomor_rab: { title: 'Nomor RAB' },
@@ -276,22 +236,6 @@
 
         document.getElementById('refresh-btn').addEventListener('click', () => dataTable.reload());
 
-        document.getElementById('apply-filter-btn').addEventListener('click', () => {
-            activeFilters.status  = document.getElementById('filter-status').value;
-            activeFilters.bulan   = document.getElementById('filter-bulan').value;
-            const divisiEl = document.getElementById('filter-divisi');
-            activeFilters.divisi_id = divisiEl ? divisiEl.value : '';
-            dataTable.reload();
-        });
-
-        document.getElementById('reset-filter-btn').addEventListener('click', () => {
-            document.getElementById('filter-status').value = '';
-            document.getElementById('filter-bulan').value  = '';
-            const divisiEl = document.getElementById('filter-divisi');
-            if (divisiEl) divisiEl.value = '';
-            activeFilters = { status: '', bulan: '', divisi_id: '' };
-            dataTable.reload();
-        });
 
         function postAction(url, body = {}) {
             return fetch(url, {

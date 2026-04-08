@@ -113,18 +113,18 @@
                                         <td colspan="5" class="text-center text-gray-400">Tidak ada item kegiatan.</td>
                                     </tr>
                                 @endforelse
-                            </tbody>
                             @if($data['rab']->items->isNotEmpty())
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="3" class="text-right font-semibold">Total</td>
-                                        <td class="text-right font-semibold">
+
+                                <tr class="font-semibold text-gray-900">
+                                        <td colspan="3" class="text-right">Total</td>
+                                        <td class="text-right">
                                             Rp {{ number_format($data['rab']->total_biaya_anggaran, 0, ',', '.') }}
                                         </td>
                                         <td></td>
                                     </tr>
-                                </tfoot>
                             @endif
+
+                            </tbody>
                         </table>
                     </div>
                 </div>

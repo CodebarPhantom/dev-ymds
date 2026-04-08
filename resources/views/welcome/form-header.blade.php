@@ -5,7 +5,7 @@
             <div class="logo-container p-3 bg-white rounded-2xl relative shadow-md">
                 <div class="deco-circle deco-circle-1"></div>
                 <div class="deco-circle deco-circle-2"></div>
-                <img src="{{ asset('storage/rumio.png') }}" alt="Logo rumio" class="w-12 h-12 object-contain relative z-10">
+                <img src="{{ asset('storage/logo.png') }}" alt="Logo rumio" class="w-12 h-12 object-contain relative z-10">
             </div>
             <div>
                 <h1 class="text-xl md:text-2xl font-bold font-quicksand" style="background: linear-gradient(135deg, #3b82f6, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">

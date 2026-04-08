@@ -58,7 +58,7 @@ License: https://keenthemes.com/metronic/tailwind/docs/getting-started/license
     <!-- Page -->
     <style>
         .branded-bg {
-            background-image: url('{{asset('storage/villa.png') }}');
+            background-image: url('{{asset('storage/ymds.jpeg') }}');
             background-size: cover;
             /* This makes the image cover the entire container */
             background-position: center;
@@ -68,7 +68,7 @@ License: https://keenthemes.com/metronic/tailwind/docs/getting-started/license
         }
 
         .dark .branded-bg {
-            background-image: url('{{asset('storage/villa.png') }}');
+            background-image: url('{{asset('storage/ymds.jpeg') }}');
             background-size: cover;
             /* Same as above, applies for dark theme */
             background-position: center;
@@ -85,7 +85,7 @@ License: https://keenthemes.com/metronic/tailwind/docs/getting-started/license
                     @csrf
                     <div class="text-center mb-2.5">
                         <a href="h#">
-                            <img class="h-[100px] max-w-non mx-auto mb-2.5" src="{{asset('storage/rumio.png') }}" />
+                            <img class="h-[100px] max-w-non mx-auto mb-2.5" src="{{asset('storage/logo.png') }}" />
                         </a>
                         <h3 class="text-lg font-medium text-gray-900 leading-none mt-2.5 mb-2.5">
                             Akun Pengelola Portal
@@ -152,7 +152,7 @@ License: https://keenthemes.com/metronic/tailwind/docs/getting-started/license
                 </a> --}}
 
                 <div class="flex flex-col gap-3">
-                    <h3 class="text-2xl font-semibold text-gray-400">
+                    {{-- <h3 class="text-2xl font-semibold text-gray-400">
                         Portal Administrator Rumio
                     </h3>
                     <div class="text-base font-medium text-gray-200">
@@ -160,7 +160,7 @@ License: https://keenthemes.com/metronic/tailwind/docs/getting-started/license
                         <span class="text-gray-400 font-semibold">
                             Masuk dengan akun anda untuk mengakses sistem.
                         </span>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
