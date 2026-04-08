@@ -6,6 +6,13 @@ return
 
     [
         'main_menu' => [
+            [
+                'title' => 'RAB',
+                'icon' => 'ki-filled ki-document',
+                'permission' => ['rab-read'],
+                'route' => 'rab.index',
+                'pathUrl' => ['rab*']
+            ],
             // [
             //     'title' => 'Beranda',
             //     'icon' => 'ki-filled ki-element-11',
@@ -13,13 +20,13 @@ return
             //     'route' => 'dashboard',
             //     'pathUrl' => ['/dashboard', 'dashboard']
             // ],
-            [
-                'title' => 'Konfirmasi Pembayaran',
-                'icon' => 'ki-filled ki-element-11',
-                'permission' => null,
-                'route' => 'admin.payment-confirmations.index',
-                'pathUrl' => ['admin/payment-confirmations*']
-            ],
+            // [
+            //     'title' => 'Konfirmasi Pembayaran',
+            //     'icon' => 'ki-filled ki-element-11',
+            //     'permission' => null,
+            //     'route' => 'admin.payment-confirmations.index',
+            //     'pathUrl' => ['admin/payment-confirmations*']
+            // ],
             // [
             //     'header' => 'Aktifitas Saya',
             // ],
@@ -34,24 +41,18 @@ return
             //     'header' => 'Musyrif',
             //     'permission' => ['evaluation-create'],
             // ],
-            [
-                'title' => 'Tahsin Tilawah',
-                'icon' => 'ki-filled ki-book',
-                'permission' => ['evaluation-create'],
-                'route' => 'forms.create.tahsin-tilawah',
-                'pathUrl' => ['forms/tahsin-tilawah*']
-            ],
+
             // [
             //     'header' => 'Administrator',
             //     'permission' => ['location-read','user-read','role-read','permission-read'],
             // ],
-            [
-                'title' => 'Lokasi',
-                'icon' => 'ki-filled ki-geolocation',
-                'permission' => ['location-read'],
-                'route' => 'location.index',
-                'pathUrl' => ['location*']
-            ],
+            // [
+            //     'title' => 'Lokasi',
+            //     'icon' => 'ki-filled ki-geolocation',
+            //     'permission' => ['location-read'],
+            //     'route' => 'location.index',
+            //     'pathUrl' => ['location*']
+            // ],
             [
                 'title' => 'User',
                 'icon' => 'ki-filled ki-security-user',

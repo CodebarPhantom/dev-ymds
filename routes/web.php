@@ -10,6 +10,7 @@ use App\Http\Controllers\UploadsController;
 use App\Http\Controllers\Web\User\UserController;
 use App\Http\Controllers\Web\LandingController;
 use App\Http\Controllers\Web\PaymentConfirmationController;
+use App\Http\Controllers\Web\Rab\RabController as WebRabController;
 
 Route::get('/', [LandingController::class, 'index'])->name('index');
 Route::get('/landing/filter/{categoryId}', [LandingController::class, 'filter'])->name('landing.filter');
@@ -78,4 +79,13 @@ Route::middleware(['auth'/*, 'verified'*/])->group(function () {
     });
 
     Route::get('/uploads/{path}', UploadsController::class)->where('path', '.*');
+
+    Route::prefix("/rab")->as("rab.")->group(function () {
+        Route::get('', [WebRabController::class, 'index'])->name('index');
+        Route::get('/create', [WebRabController::class, 'create'])->name('create');
+        Route::post('/', [WebRabController::class, 'store'])->name('store');
+        Route::get('/{rab}', [WebRabController::class, 'show'])->name('show');
+        Route::get('/{rab}/edit', [WebRabController::class, 'edit'])->name('edit');
+        Route::put('/{rab}', [WebRabController::class, 'update'])->name('update');
+    });
 });

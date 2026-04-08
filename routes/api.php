@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\LocationController;
 use App\Http\Controllers\Api\V1\PaymentConfirmationController;
+use App\Http\Controllers\Api\V1\Rab\RabController as ApiRabController;
+use App\Http\Controllers\Api\V1\Rab\RabApprovalController;
 
 // Route::post('/signin', function (Request $request) {
 //     return $request->user();
@@ -67,6 +69,14 @@ Route::as("api.")->group(function () {
 
             Route::prefix('/payment-confirmations')->as('payment-confirmations.')->group(function () {
                 Route::get('/datatable', [PaymentConfirmationController::class, 'dataTable'])->name('datatable');
+            });
+
+            Route::prefix('/rab')->as('rab.')->group(function () {
+                Route::get('/datatable', [ApiRabController::class, 'dataTable'])->name('datatable');
+                Route::post('/{rab}/submit', [ApiRabController::class, 'submit'])->name('submit');
+                Route::post('/{rab}/cancel', [ApiRabController::class, 'cancel'])->name('cancel');
+                Route::post('/{rab}/approve', [RabApprovalController::class, 'approve'])->name('approve');
+                Route::post('/{rab}/reject', [RabApprovalController::class, 'reject'])->name('reject');
             });
         });
     });

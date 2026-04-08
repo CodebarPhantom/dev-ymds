@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Models\Location;
 use App\Policies\LocationPolicy;
+use App\Models\Rab;
+use App\Policies\RabPolicy;
 use App\Models\Permission;
 use App\Policies\PermissionPolicy;
 use App\Models\PermissionGroup;
@@ -54,6 +56,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Permission::class, PermissionPolicy::class);
         Gate::policy(PermissionGroup::class, PermissionGroupPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
+        Gate::policy(Rab::class, RabPolicy::class);
 
     }
 }
