@@ -1,26 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Web\LocationController;
 use App\Http\Controllers\Web\PermissionController;
 use App\Http\Controllers\Web\PermissionGroupController;
 use App\Http\Controllers\Web\RoleController;
 use App\Http\Controllers\UploadsController;
 use App\Http\Controllers\Web\User\UserController;
-use App\Http\Controllers\Web\LandingController;
 use App\Http\Controllers\Web\PaymentConfirmationController;
 use App\Http\Controllers\Web\Rab\RabController as WebRabController;
 
-Route::get('/', [LandingController::class, 'index'])->name('index');
-Route::get('/landing/filter/{categoryId}', [LandingController::class, 'filter'])->name('landing.filter');
-
-Route::post('/payment/submit', [LandingController::class, 'submitPayment'])->name('payment.submit');
-Route::get('/payment/summary/{confirmation}', [LandingController::class, 'paymentSummary'])->name('payment.summary');
-Route::get('/payment/tracking', function (Request $request) {
-    $code = $request->get('code');
-    return view('payment-tracking', compact('code'));
-})->name('payment.tracking');
+Route::get('/', function () {
+    return auth()->check()
+        ? redirect()->route('rab.index')
+        : redirect()->route('login');
+})->name('index');
 
 
 Route::middleware(['auth'/*, 'verified'*/])->group(function () {

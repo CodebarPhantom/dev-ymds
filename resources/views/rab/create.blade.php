@@ -70,6 +70,11 @@
             return div.innerHTML;
         }
 
+        function formatBiaya(val) {
+            const num = parseFloat(String(val).replace(/\./g, '').replace(/,/g, ''));
+            return isNaN(num) || num === 0 ? '' : num.toLocaleString('id-ID');
+        }
+
         function createItemRow(index, data = {}) {
             const row = document.createElement('div');
             row.className = 'rab-item-row border border-gray-200 rounded-lg p-4 mb-4';
@@ -95,8 +100,8 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-3">
                     <div class="flex flex-col gap-1">
                         <label class="form-label">Biaya Anggaran (Rp) <span class="text-danger">*</span></label>
-                        <input class="input" type="number" name="items[${index}][biaya_anggaran]"
-                            placeholder="0" min="0" required value="${escapeHtml(data.biaya_anggaran ?? '')}">
+                        <input class="input biaya-input" type="text" name="items[${index}][biaya_anggaran]"
+                            placeholder="0" required value="${formatBiaya(data.biaya_anggaran ?? '')}">
                     </div>
                 </div>
                 <div class="flex flex-col gap-1">
@@ -132,6 +137,20 @@
         }
 
         document.getElementById('tambah-item-btn').addEventListener('click', () => addItem());
+
+        // Format comma separator on biaya input
+        document.getElementById('rab-items-container').addEventListener('input', function (e) {
+            if (!e.target.classList.contains('biaya-input')) return;
+            const raw = e.target.value.replace(/\D/g, '');
+            e.target.value = raw ? parseInt(raw).toLocaleString('id-ID') : '';
+        });
+
+        // Strip commas before submit
+        document.getElementById('rab-form').addEventListener('submit', function () {
+            document.querySelectorAll('.biaya-input').forEach(input => {
+                input.value = input.value.replace(/\./g, '').replace(/,/g, '');
+            });
+        });
 
         @if(old('items'))
             @foreach(old('items', []) as $item)

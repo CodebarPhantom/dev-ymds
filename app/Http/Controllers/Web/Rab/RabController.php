@@ -50,7 +50,15 @@ class RabController extends MasterController
         $func = function () use ($request) {
             Gate::authorize('createPolicy', Rab::class);
 
-            $request->validate([
+            // Strip thousand separators from biaya_anggaran
+            $input = $request->all();
+            foreach ($input['items'] ?? [] as $i => $item) {
+                if (isset($item['biaya_anggaran'])) {
+                    $input['items'][$i]['biaya_anggaran'] = str_replace(['.', ','], '', $item['biaya_anggaran']);
+                }
+            }
+
+            validator($input, [
                 'bulan_pengajuan'            => 'required|date',
                 'items'                      => 'required|array|min:1',
                 'items.*.kegiatan'           => 'required|string|max:255',
@@ -61,9 +69,9 @@ class RabController extends MasterController
                 'items.*.biaya_anggaran.required' => 'Biaya anggaran wajib diisi.',
                 'items.*.biaya_anggaran.numeric'  => 'Biaya anggaran harus berupa angka.',
                 'items.*.biaya_anggaran.min'      => 'Biaya anggaran tidak boleh bernilai negatif.',
-            ]);
+            ])->validate();
 
-            $this->rabService->storeRab($request->all(), auth()->user());
+            $this->rabService->storeRab($input, auth()->user());
             $this->messages = ['RAB berhasil dibuat.'];
         };
 
@@ -113,7 +121,15 @@ class RabController extends MasterController
         $func = function () use ($request, $rab) {
             Gate::authorize('updatePolicy', $rab);
 
-            $request->validate([
+            // Strip thousand separators from biaya_anggaran
+            $input = $request->all();
+            foreach ($input['items'] ?? [] as $i => $item) {
+                if (isset($item['biaya_anggaran'])) {
+                    $input['items'][$i]['biaya_anggaran'] = str_replace(['.', ','], '', $item['biaya_anggaran']);
+                }
+            }
+
+            validator($input, [
                 'bulan_pengajuan'            => 'required|date',
                 'items'                      => 'required|array|min:1',
                 'items.*.kegiatan'           => 'required|string|max:255',
@@ -124,9 +140,9 @@ class RabController extends MasterController
                 'items.*.biaya_anggaran.required' => 'Biaya anggaran wajib diisi.',
                 'items.*.biaya_anggaran.numeric'  => 'Biaya anggaran harus berupa angka.',
                 'items.*.biaya_anggaran.min'      => 'Biaya anggaran tidak boleh bernilai negatif.',
-            ]);
+            ])->validate();
 
-            $this->rabService->updateRab($rab, $request->all());
+            $this->rabService->updateRab($rab, $input);
             $this->messages = ['RAB berhasil diperbarui.'];
         };
 
