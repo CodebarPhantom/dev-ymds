@@ -9,6 +9,8 @@ use App\Http\Controllers\UploadsController;
 use App\Http\Controllers\Web\User\UserController;
 use App\Http\Controllers\Web\PaymentConfirmationController;
 use App\Http\Controllers\Web\Rab\RabController as WebRabController;
+use App\Http\Controllers\Web\Rab\RabDashboardController as WebRabDashboardController;
+use App\Http\Controllers\Web\Rab\RabExportController as WebRabExportController;
 
 Route::get('/', function () {
     return auth()->check()
@@ -78,6 +80,9 @@ Route::middleware(['auth'/*, 'verified'*/])->group(function () {
         Route::get('', [WebRabController::class, 'index'])->name('index');
         Route::get('/create', [WebRabController::class, 'create'])->name('create');
         Route::post('/', [WebRabController::class, 'store'])->name('store');
+        // Dashboard & export must be before /{rab} to avoid route parameter conflict
+        Route::get('/dashboard', [WebRabDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/export', [WebRabExportController::class, 'export'])->name('export');
         Route::get('/{rab}', [WebRabController::class, 'show'])->name('show');
         Route::get('/{rab}/edit', [WebRabController::class, 'edit'])->name('edit');
         Route::put('/{rab}', [WebRabController::class, 'update'])->name('update');

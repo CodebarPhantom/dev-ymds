@@ -99,7 +99,7 @@
                     <div class="flex flex-col gap-1">
                         <label class="form-label">Waktu Pelaksanaan <span class="text-danger">*</span></label>
                         <input class="input" type="text" name="items[${index}][waktu_pelaksanaan]"
-                            placeholder="Contoh: Januari 2025" required value="${escapeHtml(data.waktu_pelaksanaan ?? '')}">
+                            placeholder="Contoh: 18 Januari 20xx" required value="${escapeHtml(data.waktu_pelaksanaan ?? '')}">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-3">

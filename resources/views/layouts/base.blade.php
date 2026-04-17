@@ -13,14 +13,14 @@ License: https://keenthemes.com/metronic/tailwind/docs/getting-started/license
 
 <head>
     <meta charset="utf-8">
-    <title> Portal Villa Permata Hijau Karawang - {{ 'Signin' ?? 'Karawang' }} </title>
+    <title> RAB YMDS KARAWANG - {{ 'Signin' ?? 'Karawang' }} </title>
     <base href="/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex">
     <meta name="robots" content="noindex, nofollow">
     <meta name="googlebot" content="noindex">
     <meta name="author" content="Eryan Fauzan">
-    <meta name="description" content="Portal Villa Permata Hijau Karawang - Portal Pengelolaan Iuran Warga Digital untuk Kemudahan dan Efisiensi">
+    <meta name="description" content="RAB YMDS KARAWANG">
     <link rel="icon" type="image/png" href="{{ asset('storage/logo.png') }}" sizes="48x48" />
     <link rel="icon" type="image/svg+xml" href="{{ asset('storage/logo.png') }}" />
     <link rel="shortcut icon" href="{{ asset('storage/logo.png') }}" />

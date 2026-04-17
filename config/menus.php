@@ -11,7 +11,22 @@ return
                 'icon' => 'ki-filled ki-document',
                 'permission' => ['rab-read'],
                 'route' => 'rab.index',
-                'pathUrl' => ['rab*']
+                'pathUrl' => ['rab*'],
+                'children' => [
+                    [
+                        'title' => 'Dashboard RAB',
+                        'route' => 'rab.dashboard',
+                        'permission' => ['rab-read'],
+                        'pathUrl' => ['rab/dashboard*'],
+                    ],
+                    [
+                        'title' => 'Daftar RAB',
+                        'route' => 'rab.index',
+                        'permission' => ['rab-read'],
+                        'pathUrl' => ['rab', 'rab/create', 'rab/*/edit'],
+                    ],
+
+                ],
             ],
             // [
             //     'title' => 'Beranda',

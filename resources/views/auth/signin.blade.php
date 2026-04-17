@@ -21,7 +21,7 @@ License: https://keenthemes.com/metronic/tailwind/docs/getting-started/license
     <meta name="robots" content="noindex, nofollow">
     <meta name="googlebot" content="noindex">
     <meta name="author" content="Eryan Fauzan">
-    <meta name="description" content="Rumio - Portal Pengelolaan Iuran Warga Digital untuk Kemudahan dan Efisiensi">
+    <meta name="description" content="RAB YMDS KARAWANG">
     <link rel="icon" type="image/png" href="{{ asset('storage/logo.jpeg') }}" sizes="48x48" />
     <link rel="icon" type="image/svg+xml" href="{{ asset('storage/logo.jpeg') }}" />
     <link rel="shortcut icon" href="{{ asset('storage/logo.jpeg') }}" />

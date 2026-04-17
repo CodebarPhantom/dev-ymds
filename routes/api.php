@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\LocationController;
 use App\Http\Controllers\Api\V1\PaymentConfirmationController;
 use App\Http\Controllers\Api\V1\Rab\RabController as ApiRabController;
 use App\Http\Controllers\Api\V1\Rab\RabApprovalController;
+use App\Http\Controllers\Api\V1\Rab\RabDashboardController as ApiRabDashboardController;
 
 // Route::post('/signin', function (Request $request) {
 //     return $request->user();
@@ -77,6 +78,8 @@ Route::as("api.")->group(function () {
                 Route::post('/{rab}/cancel', [ApiRabController::class, 'cancel'])->name('cancel');
                 Route::post('/{rab}/approve', [RabApprovalController::class, 'approve'])->name('approve');
                 Route::post('/{rab}/reject', [RabApprovalController::class, 'reject'])->name('reject');
+                Route::get('/dashboard/summary', [ApiRabDashboardController::class, 'summary'])->name('dashboard.summary');
+                Route::get('/dashboard/chart', [ApiRabDashboardController::class, 'chart'])->name('dashboard.chart');
             });
         });
     });
