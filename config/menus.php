@@ -28,6 +28,27 @@ return
 
                 ],
             ],
+            [
+                'title' => 'Pengajuan Pembelian',
+                'icon' => 'ki-filled ki-purchase',
+                'permission' => ['purchase-request-read'],
+                'route' => 'purchase-requests.index',
+                'pathUrl' => ['purchase-requests*'],
+                'children' => [
+                    [
+                        'title' => 'Dashboard',
+                        'route' => 'purchase-requests.dashboard',
+                        'permission' => ['purchase-request-read'],
+                        'pathUrl' => ['purchase-requests/dashboard*'],
+                    ],
+                    [
+                        'title' => 'Daftar Pengajuan',
+                        'route' => 'purchase-requests.index',
+                        'permission' => ['purchase-request-read'],
+                        'pathUrl' => ['purchase-requests', 'purchase-requests/create', 'purchase-requests/*/edit'],
+                    ],
+                ],
+            ],
             // [
             //     'title' => 'Beranda',
             //     'icon' => 'ki-filled ki-element-11',

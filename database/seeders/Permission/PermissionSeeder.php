@@ -47,6 +47,22 @@ class PermissionSeeder extends Seeder
             'user-delete'
         ]);
 
+        $this->createPermissionGroupWithPermissions('RAB', [
+            'rab-read',
+            'rab-create',
+            'rab-update',
+            'rab-cancel',
+            'rab-approve',
+        ]);
+
+        $this->createPermissionGroupWithPermissions('Pengajuan Pembelian Barang', [
+            'purchase-request-read',
+            'purchase-request-create',
+            'purchase-request-update',
+            'purchase-request-cancel',
+            'purchase-request-approve',
+        ]);
+
     }
 
     /**

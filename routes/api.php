@@ -12,6 +12,10 @@ use App\Http\Controllers\Api\V1\PaymentConfirmationController;
 use App\Http\Controllers\Api\V1\Rab\RabController as ApiRabController;
 use App\Http\Controllers\Api\V1\Rab\RabApprovalController;
 use App\Http\Controllers\Api\V1\Rab\RabDashboardController as ApiRabDashboardController;
+use App\Http\Controllers\Api\V1\PurchaseRequest\PurchaseRequestController as ApiPurchaseRequestController;
+use App\Http\Controllers\Api\V1\PurchaseRequest\PurchaseRequestApprovalController as ApiPurchaseRequestApprovalController;
+use App\Http\Controllers\Api\V1\PurchaseRequest\PurchaseRequestPurchasingController as ApiPurchaseRequestPurchasingController;
+use App\Http\Controllers\Api\V1\PurchaseRequest\PurchaseRequestDashboardController as ApiPurchaseRequestDashboardController;
 
 // Route::post('/signin', function (Request $request) {
 //     return $request->user();
@@ -80,6 +84,18 @@ Route::as("api.")->group(function () {
                 Route::post('/{rab}/reject', [RabApprovalController::class, 'reject'])->name('reject');
                 Route::get('/dashboard/summary', [ApiRabDashboardController::class, 'summary'])->name('dashboard.summary');
                 Route::get('/dashboard/chart', [ApiRabDashboardController::class, 'chart'])->name('dashboard.chart');
+            });
+
+            Route::prefix('/purchase-requests')->as('purchase-requests.')->group(function () {
+                Route::get('/datatable', [ApiPurchaseRequestController::class, 'dataTable'])->name('datatable');
+                Route::get('/dashboard/summary', [ApiPurchaseRequestDashboardController::class, 'summary'])->name('dashboard.summary');
+                Route::get('/dashboard/chart', [ApiPurchaseRequestDashboardController::class, 'chart'])->name('dashboard.chart');
+                Route::post('/{purchaseRequest}/submit', [ApiPurchaseRequestApprovalController::class, 'submit'])->name('submit');
+                Route::post('/{purchaseRequest}/cancel', [ApiPurchaseRequestApprovalController::class, 'cancel'])->name('cancel');
+                Route::post('/{purchaseRequest}/approve', [ApiPurchaseRequestApprovalController::class, 'approve'])->name('approve');
+                Route::post('/{purchaseRequest}/reject', [ApiPurchaseRequestApprovalController::class, 'reject'])->name('reject');
+                Route::post('/{purchaseRequest}/start-purchasing', [ApiPurchaseRequestPurchasingController::class, 'startPurchasing'])->name('start-purchasing');
+                Route::post('/{purchaseRequest}/items/{item}/mark-purchased', [ApiPurchaseRequestPurchasingController::class, 'markItemPurchased'])->name('items.mark-purchased');
             });
         });
     });

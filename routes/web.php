@@ -11,6 +11,9 @@ use App\Http\Controllers\Web\PaymentConfirmationController;
 use App\Http\Controllers\Web\Rab\RabController as WebRabController;
 use App\Http\Controllers\Web\Rab\RabDashboardController as WebRabDashboardController;
 use App\Http\Controllers\Web\Rab\RabExportController as WebRabExportController;
+use App\Http\Controllers\Web\PurchaseRequest\PurchaseRequestController as WebPurchaseRequestController;
+use App\Http\Controllers\Web\PurchaseRequest\PurchaseRequestDashboardController as WebPurchaseRequestDashboardController;
+use App\Http\Controllers\Web\PurchaseRequest\PurchaseRequestExportController as WebPurchaseRequestExportController;
 
 Route::get('/', function () {
     return auth()->check()
@@ -75,6 +78,18 @@ Route::middleware(['auth'/*, 'verified'*/])->group(function () {
     });
 
     Route::get('/uploads/{path}', UploadsController::class)->where('path', '.*');
+
+    Route::prefix('/purchase-requests')->as('purchase-requests.')->group(function () {
+        Route::get('', [WebPurchaseRequestController::class, 'index'])->name('index');
+        Route::get('/create', [WebPurchaseRequestController::class, 'create'])->name('create');
+        Route::post('/', [WebPurchaseRequestController::class, 'store'])->name('store');
+        // Dashboard & export harus sebelum /{purchaseRequest} untuk menghindari konflik route parameter
+        Route::get('/dashboard', [WebPurchaseRequestDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/export', [WebPurchaseRequestExportController::class, 'export'])->name('export');
+        Route::get('/{purchaseRequest}', [WebPurchaseRequestController::class, 'show'])->name('show');
+        Route::get('/{purchaseRequest}/edit', [WebPurchaseRequestController::class, 'edit'])->name('edit');
+        Route::put('/{purchaseRequest}', [WebPurchaseRequestController::class, 'update'])->name('update');
+    });
 
     Route::prefix("/rab")->as("rab.")->group(function () {
         Route::get('', [WebRabController::class, 'index'])->name('index');
