@@ -55,7 +55,7 @@
                         <div class="flex items-baseline flex-wrap lg:flex-nowrap gap-2.5">
                             <label class="form-label max-w-56">Keperluan</label>
                             <div class="w-full">
-                                <textarea id="keperluan" name="keperluan" class="textarea">{{ old('keperluan', $data['purchaseRequest']->keperluan) }}</textarea>
+                                <textarea name="keperluan" class="textarea" rows="4" placeholder="Tuliskan keperluan pengajuan...">{{ old('keperluan', $data['purchaseRequest']->keperluan) }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -80,26 +80,8 @@
     </form>
 @endsection
 
-@push('head')
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
-@endpush
-
 @push('javascript')
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
     <script>
-        // Init Summernote
-        $('#keperluan').summernote({
-            placeholder: 'Tuliskan keperluan pengajuan...',
-            tabsize: 2,
-            height: 200,
-            toolbar: [
-                ['style', ['bold', 'italic', 'underline', 'clear']],
-                ['font', ['strikethrough']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['insert', ['link']],
-                ['view', ['fullscreen', 'codeview']],
-            ],
-        });
 
         let itemIndex = 0;
 

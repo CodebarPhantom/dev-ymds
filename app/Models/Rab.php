@@ -49,7 +49,7 @@ class Rab extends Model
 
     public function approvalLogs()
     {
-        return $this->hasMany(RabApprovalLog::class);
+        return $this->hasMany(RabApprovalLog::class)->latest();
     }
 
     public function dibuatOleh()

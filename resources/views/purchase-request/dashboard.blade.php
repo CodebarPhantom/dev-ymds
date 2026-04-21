@@ -28,7 +28,7 @@
 
                 <div class="flex items-center gap-1.5">
                     <label class="text-xs text-gray-500 whitespace-nowrap">Tahun</label>
-                    <select id="filter-tahun" class="select select-sm !h-7 !text-xs !py-0 w-24">
+                   <select id="filter-tahun" class="select select-sm !h-7 !text-xs !py-0" style="width: 80px; padding-right: 1.75rem;">
                         @foreach($data['availableYears'] as $year)
                             <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>{{ $year }}</option>
                         @endforeach
@@ -38,7 +38,7 @@
                 <div class="flex items-center gap-1.5">
                     <label class="text-xs text-gray-500 whitespace-nowrap">Bulan</label>
                     <select id="filter-bulan" class="select select-sm !h-7 !text-xs !py-0 w-36">
-                        <option value="">Semua Bulan</option>
+                        <option value="">Semua</option>
                         @foreach(['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'] as $i => $bln)
                             <option value="{{ $i + 1 }}">{{ $bln }}</option>
                         @endforeach
@@ -48,7 +48,7 @@
                 @if($data['isPrivilegedUser'])
                 <div class="flex items-center gap-1.5">
                     <label class="text-xs text-gray-500 whitespace-nowrap">Divisi</label>
-                    <select id="filter-divisi" class="select select-sm !h-7 !text-xs !py-0 w-44">
+                    <select id="filter-divisi" class="select select-sm !h-7 !text-xs !py-0 w-40">
                         <option value="">Semua Divisi</option>
                         @foreach($data['divisiList'] as $divisi)
                             <option value="{{ $divisi }}">{{ $divisi }}</option>

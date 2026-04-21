@@ -137,7 +137,7 @@
                 </div>
                 <div class="card-body">
                     @php
-                        $logs = $data['rab']->approvalLogs->sortBy('created_at');
+                        $logs = $data['rab']->approvalLogs->sortByDesc('created_at');
                         $aksiColors = [
                             'SUBMITTED'          => 'info',
                             'APPROVED_BENDAHARA' => 'success',

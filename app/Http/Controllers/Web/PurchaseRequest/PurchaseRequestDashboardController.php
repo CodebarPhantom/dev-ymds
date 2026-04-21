@@ -22,10 +22,7 @@ class PurchaseRequestDashboardController extends MasterController
         $func = function () {
             Gate::authorize('readPolicy', PurchaseRequest::class);
 
-            $breadcrumbs = [
-                ['title' => 'Pengajuan Pembelian Barang'],
-                ['title' => 'Dashboard'],
-            ];
+            $breadcrumbs = ['Pengajuan Pembelian Barang','Dashboard'];
             $pageTitle        = 'Dashboard Pengajuan Pembelian Barang';
             $availableYears   = $this->dashboardService->getAvailableYears();
             $divisiList       = $this->dashboardService->getDivisiList();

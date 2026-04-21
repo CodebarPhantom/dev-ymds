@@ -74,11 +74,9 @@
                         </div>
                     </div>
                     @if($data['purchaseRequest']->keperluan)
-                        <div class="flex flex-col gap-2">
-                            <label class="form-label">Keperluan</label>
-                            <div class="prose prose-sm max-w-none border rounded p-3 bg-gray-50">
-                                {!! $data['purchaseRequest']->keperluan !!}
-                            </div>
+                        <div class="flex items-baseline flex-wrap lg:flex-nowrap gap-2.5">
+                            <label class="form-label max-w-56">Keperluan</label>
+                            <textarea class="textarea" rows="4" disabled>{{ $data['purchaseRequest']->keperluan }}</textarea>
                         </div>
                     @endif
                 </div>
@@ -92,7 +90,9 @@
                 <div class="card-body">
                     <div class="scrollable-x-auto">
                         @php
-                            $isInPurchasing = $data['purchaseRequest']->isInPurchasing();
+                            $showPurchasingCols = $data['purchaseRequest']->isInPurchasing()
+                                || $data['purchaseRequest']->status === \App\Enums\PurchaseRequestStatus::COMPLETED;
+                            $canMarkPurchased = $data['purchaseRequest']->isInPurchasing();
                         @endphp
                         <table class="table table-auto table-border align-middle text-gray-700 font-medium text-sm">
                             <thead>
@@ -102,11 +102,17 @@
                                     <th>Satuan</th>
                                     <th class="text-right">Jumlah</th>
                                     <th class="text-right">Biaya Estimasi</th>
-                                    @if($isInPurchasing)
+                                    <th class="text-right">Total Biaya</th>
+                                    @if($showPurchasingCols)
                                         <th class="text-center">Sudah Dibeli</th>
                                         <th class="text-right">Harga Aktual</th>
                                     @endif
                                     <th>Catatan</th>
+                                    @can('purchasingPolicy', $data['purchaseRequest'])
+                                        @if($canMarkPurchased)
+                                            <th class="text-center">Aksi</th>
+                                        @endif
+                                    @endcan
                                 </tr>
                             </thead>
                             <tbody>
@@ -119,7 +125,10 @@
                                         <td class="text-right">
                                             Rp {{ number_format($item->biaya_estimasi, 0, ',', '.') }}
                                         </td>
-                                        @if($isInPurchasing)
+                                        <td class="text-right">
+                                            Rp {{ number_format($item->jumlah * $item->biaya_estimasi, 0, ',', '.') }}
+                                        </td>
+                                        @if($showPurchasingCols)
                                             <td class="text-center">
                                                 @if($item->sudah_dibeli)
                                                     <span class="badge badge-success badge-outline">Ya</span>
@@ -142,21 +151,34 @@
                                                 <span class="text-gray-400 text-xs">-</span>
                                             @endif
                                         </td>
+                                        @can('purchasingPolicy', $data['purchaseRequest'])
+                                            @if($canMarkPurchased)
+                                                <td class="text-center">
+                                                    @if(!$item->sudah_dibeli)
+                                                        <button type="button"
+                                                            class="btn btn-xs btn-success"
+                                                            onclick="openMarkPurchasedModal({{ $item->id }}, '{{ addslashes($item->nama_barang) }}', '{{ route('api.v1.purchase-requests.items.mark-purchased', [$data['purchaseRequest']->id, $item->id]) }}')">
+                                                            <i class="ki-filled ki-check"></i> Tandai Dibeli
+                                                        </button>
+                                                    @endif
+                                                </td>
+                                            @endif
+                                        @endcan
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="{{ $isInPurchasing ? 8 : 6 }}" class="text-center text-gray-400">
+                                        <td colspan="{{ $showPurchasingCols ? 9 : 7 }}" class="text-center text-gray-400">
                                             Tidak ada item barang.
                                         </td>
                                     </tr>
                                 @endforelse
                                 @if($data['purchaseRequest']->items->isNotEmpty())
                                     <tr class="font-semibold text-gray-900">
-                                        <td colspan="{{ $isInPurchasing ? 4 : 4 }}" class="text-right">Total</td>
+                                        <td colspan="5" class="text-right">Total</td>
                                         <td class="text-right">
                                             Rp {{ number_format($data['purchaseRequest']->total_biaya_estimasi, 0, ',', '.') }}
                                         </td>
-                                        @if($isInPurchasing)
+                                        @if($showPurchasingCols)
                                             <td></td>
                                             <td class="text-right">
                                                 Rp {{ number_format($data['purchaseRequest']->total_biaya_aktual, 0, ',', '.') }}
@@ -192,12 +214,12 @@
                         ];
                         $aksiLabels = [
                             'SUBMITTED'           => 'Diajukan',
-                            'APPROVED_BENDAHARA'  => 'Disetujui Bendahara',
+                            'APPROVED_BENDAHARA'  => 'Menunggu Persetujuan Ketua',
                             'REJECTED_BENDAHARA'  => 'Ditolak Bendahara',
-                            'APPROVED_KETUA'      => 'Disetujui Ketua',
+                            'APPROVED_KETUA'      => 'Menunggu Proses Pembelian',
                             'REJECTED_KETUA'      => 'Ditolak Ketua',
                             'CANCELLED'           => 'Dibatalkan',
-                            'PURCHASING_STARTED'  => 'Pembelian Dimulai',
+                            'PURCHASING_STARTED'  => 'Proses Pembelian',
                             'ITEM_PURCHASED'      => 'Item Dibeli',
                             'COMPLETED'           => 'Selesai',
                         ];
@@ -247,3 +269,81 @@
     </div>
     <!-- End of Container -->
 @endsection
+
+@if($data['purchaseRequest']->isInPurchasing())
+@push('javascript')
+<script>
+    let pendingMarkUrl = null;
+
+    function openMarkPurchasedModal(itemId, namaBarang, url) {
+        pendingMarkUrl = url;
+        document.getElementById('modal-item-name').textContent = namaBarang;
+        document.getElementById('input-harga-aktual').value = '';
+        KTModal.getInstance(document.getElementById('modal_mark_purchased')).show();
+    }
+
+    document.getElementById('confirm-mark-purchased-btn').addEventListener('click', function () {
+        const raw   = document.getElementById('input-harga-aktual').value.replace(/\./g, '').replace(/,/g, '');
+        const harga = parseFloat(raw);
+
+        if (isNaN(harga) || harga < 0) {
+            alert('Harga aktual harus berupa angka dan tidak boleh negatif.');
+            return;
+        }
+
+        fetch(pendingMarkUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ harga_aktual: harga }),
+        })
+        .then(r => r.json())
+        .then(res => {
+            KTModal.getInstance(document.getElementById('modal_mark_purchased')).hide();
+            if (res.error) {
+                alert(res.messages?.join('\n') ?? 'Terjadi kesalahan.');
+                return;
+            }
+            window.location.reload();
+        });
+    });
+
+    // Format thousand separator on harga input
+    document.getElementById('input-harga-aktual').addEventListener('input', function () {
+        const raw = this.value.replace(/\D/g, '');
+        this.value = raw ? parseInt(raw).toLocaleString('id-ID') : '';
+    });
+</script>
+@endpush
+
+<!-- Modal Tandai Sudah Dibeli -->
+<div class="modal hidden" id="modal_mark_purchased" data-modal="true">
+    <div class="modal-content max-w-md top-[15%]">
+        <div class="modal-header">
+            <h3 class="modal-title">Tandai Sudah Dibeli</h3>
+            <button class="btn btn-xs btn-icon btn-light" data-modal-dismiss="true">
+                <i class="ki-outline ki-cross"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p class="text-sm text-gray-700 mb-3">
+                Tandai item <strong id="modal-item-name"></strong> sebagai sudah dibeli.
+            </p>
+            <div class="flex flex-col gap-1">
+                <label class="form-label">Harga Aktual (Rp) <span class="text-danger">*</span></label>
+                <input id="input-harga-aktual" class="input" type="text" placeholder="0" />
+                <span class="text-xs text-gray-400">Total harga aktual item yang sudah dibeli</span>
+            </div>
+        </div>
+        <div class="modal-footer justify-end">
+            <button class="btn btn-sm btn-light" data-modal-dismiss="true">Batal</button>
+            <button id="confirm-mark-purchased-btn" class="btn btn-sm btn-success">
+                <i class="ki-filled ki-check"></i> Konfirmasi
+            </button>
+        </div>
+    </div>
+</div>
+@endif

@@ -24,11 +24,8 @@ class PurchaseRequestController extends MasterController
         $func = function () {
             Gate::authorize('readPolicy', PurchaseRequest::class);
 
-            $breadcrumbs = [
-                ['title' => 'Pengajuan Pembelian Barang', 'url' => route('purchase-requests.index')],
-                ['title' => 'Daftar Pengajuan'],
-            ];
-            $pageTitle = 'Daftar Pengajuan Pembelian Barang';
+            $breadcrumbs = ['Pengajuan Pembelian Barang', 'Daftar Pengajuan'];
+            $pageTitle = 'Daftar Pengajuan';
             $isPrivilegedUser = $this->isPrivilegedUser();
 
             $this->data = compact('breadcrumbs', 'pageTitle', 'isPrivilegedUser');
@@ -42,11 +39,8 @@ class PurchaseRequestController extends MasterController
         $func = function () {
             Gate::authorize('createPolicy', PurchaseRequest::class);
 
-            $breadcrumbs = [
-                ['title' => 'Pengajuan Pembelian Barang', 'url' => route('purchase-requests.index')],
-                ['title' => 'Buat Pengajuan'],
-            ];
-            $pageTitle = 'Buat Pengajuan Pembelian Barang';
+            $breadcrumbs = ['Pengajuan Pembelian Barang', 'Buat Pengajuan'];
+            $pageTitle = 'Buat Pengajuan';
 
             $this->data = compact('breadcrumbs', 'pageTitle');
         };
@@ -80,11 +74,8 @@ class PurchaseRequestController extends MasterController
 
             $purchaseRequest->load(['items', 'logs.dilakukanOleh']);
 
-            $breadcrumbs = [
-                ['title' => 'Pengajuan Pembelian Barang', 'url' => route('purchase-requests.index')],
-                ['title' => 'Detail Pengajuan'],
-            ];
-            $pageTitle = 'Detail Pengajuan Pembelian Barang';
+            $breadcrumbs = ['Pengajuan Pembelian Barang', 'Detail Pengajuan'];
+            $pageTitle = 'Detail Pengajuan';
 
             $this->data = compact('breadcrumbs', 'pageTitle', 'purchaseRequest');
         };
@@ -99,11 +90,8 @@ class PurchaseRequestController extends MasterController
 
             $purchaseRequest->load('items');
 
-            $breadcrumbs = [
-                ['title' => 'Pengajuan Pembelian Barang', 'url' => route('purchase-requests.index')],
-                ['title' => 'Edit Pengajuan'],
-            ];
-            $pageTitle = 'Edit Pengajuan Pembelian Barang';
+            $breadcrumbs = ['Pengajuan Pembelian Barang', 'Edit Pengajuan'];
+            $pageTitle = 'Edit Pengajuan';
 
             $this->data = compact('breadcrumbs', 'pageTitle', 'purchaseRequest');
         };

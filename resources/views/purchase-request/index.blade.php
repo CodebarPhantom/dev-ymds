@@ -59,6 +59,9 @@
                                         <th class="text-center" data-datatable-column="total_biaya_estimasi">
                                             <span class="sort"><span class="sort-label">Total Biaya Estimasi</span><span class="sort-icon"></span></span>
                                         </th>
+                                        <th class="text-center" data-datatable-column="total_biaya_aktual">
+                                            <span class="sort"><span class="sort-label">Total Biaya Aktual</span><span class="sort-icon"></span></span>
+                                        </th>
                                         <th class="text-center" data-datatable-column="status">
                                             <span class="sort"><span class="sort-label">Status</span><span class="sort-icon"></span></span>
                                         </th>
@@ -198,6 +201,12 @@
         columns.total_biaya_estimasi = {
             title: 'Total Biaya Estimasi',
             render: (data, type, row) => `Rp ${type.total_biaya_estimasi_formatted ?? data}`,
+            createdCell(cell) { cell.classList.add('text-right'); },
+        };
+
+        columns.total_biaya_aktual = {
+            title: 'Total Biaya Aktual',
+            render: (data, type, row) => `Rp ${type.total_biaya_aktual_formatted ?? data}`,
             createdCell(cell) { cell.classList.add('text-right'); },
         };
 
