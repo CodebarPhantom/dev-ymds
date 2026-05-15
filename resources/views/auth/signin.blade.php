@@ -22,10 +22,10 @@ License: https://keenthemes.com/metronic/tailwind/docs/getting-started/license
     <meta name="googlebot" content="noindex">
     <meta name="author" content="Eryan Fauzan">
     <meta name="description" content="RAB YMDS KARAWANG">
-    <link rel="icon" type="image/png" href="{{ asset('storage/logo.png') }}" sizes="48x48" />
-    <link rel="icon" type="image/svg+xml" href="{{ asset('storage/logo.png') }}" />
-    <link rel="shortcut icon" href="{{ asset('storage/logo.png') }}" />
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('storage/logo.png') }}" />
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}" sizes="48x48" />
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo.png') }}" />
+    <link rel="shortcut icon" href="{{ asset('images/logo.png') }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/logo.png') }}" />
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
     @vite('resources/css/app.scss')
@@ -58,7 +58,7 @@ License: https://keenthemes.com/metronic/tailwind/docs/getting-started/license
     <!-- Page -->
     <style>
         .branded-bg {
-            background-image: url('{{asset('storage/ymds.jpeg') }}');
+            background-image: url('{{asset('images/ymds.jpeg') }}');
             background-size: cover;
             /* This makes the image cover the entire container */
             background-position: center;
@@ -68,7 +68,7 @@ License: https://keenthemes.com/metronic/tailwind/docs/getting-started/license
         }
 
         .dark .branded-bg {
-            background-image: url('{{asset('storage/ymds.jpeg') }}');
+            background-image: url('{{asset('images/ymds.jpeg') }}');
             background-size: cover;
             /* Same as above, applies for dark theme */
             background-position: center;
@@ -85,7 +85,7 @@ License: https://keenthemes.com/metronic/tailwind/docs/getting-started/license
                     @csrf
                     <div class="text-center mb-2.5">
                         <a href="h#">
-                            <img class="h-[100px] max-w-non mx-auto mb-2.5" src="{{asset('storage/logo.png') }}" />
+                            <img class="h-[100px] max-w-non mx-auto mb-2.5" src="{{asset('images/logo.png') }}" />
                         </a>
                         <h3 class="text-lg font-medium text-gray-900 leading-none mt-2.5 mb-2.5">
                             Akun Pengelola Portal
