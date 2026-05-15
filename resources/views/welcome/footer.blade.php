@@ -176,6 +176,6 @@
 </div>
 <!-- Footer -->
 <footer class="mt-12 text-center text-gray-600 text-sm">
-    <p>&copy; 2025 rumio - Membangun komunitas modern</p>
+    <p>&copy; 2025 YMDS Membangun komunitas modern</p>
     <p class="text-xs mt-1 text-gray-500">Semua tercatat & transparan</p>
 </footer>

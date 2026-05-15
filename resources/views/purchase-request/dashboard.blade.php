@@ -174,13 +174,80 @@
         </div>
     </div>
 
+    {{-- ── Charts ── --}}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+
+        {{-- Stacked Bar: Distribusi Status per Bulan --}}
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title text-sm">Distribusi Status per Bulan</h3>
+                <span class="text-xs text-gray-400" id="chart-bar-year"></span>
+            </div>
+            <div class="card-body p-4">
+                <div id="chart-bar-loading" class="flex items-center justify-center h-48 text-gray-300">
+                    <i class="ki-filled ki-arrows-circle animate-spin text-2xl"></i>
+                </div>
+                <canvas id="chart-status-bar" class="hidden" height="200"></canvas>
+            </div>
+        </div>
+
+        {{-- Line: Estimasi vs Aktual per Bulan --}}
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title text-sm">Biaya Estimasi vs Aktual per Bulan</h3>
+                <span class="text-xs text-gray-400" id="chart-line-year"></span>
+            </div>
+            <div class="card-body p-4">
+                <div id="chart-line-loading" class="flex items-center justify-center h-48 text-gray-300">
+                    <i class="ki-filled ki-arrows-circle animate-spin text-2xl"></i>
+                </div>
+                <canvas id="chart-biaya-line" class="hidden" height="200"></canvas>
+            </div>
+        </div>
+
+    </div>
+
 </div>
 @endsection
+
+@push('head')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+@endpush
 
 @push('javascript')
 <script>
     const summaryApiUrl = '{{ route('api.v1.purchase-requests.dashboard.summary') }}';
+    const chartApiUrl   = '{{ route('api.v1.purchase-requests.dashboard.chart') }}';
     const isPrivileged  = {{ $data['isPrivilegedUser'] ? 'true' : 'false' }};
+
+    let barChartInstance  = null;
+    let lineChartInstance = null;
+
+    const STATUS_COLORS = {
+        DRAFT:                '#94a3b8',
+        PENDING_BENDAHARA:    '#f59e0b',
+        REJECTED_BENDAHARA:   '#ef4444',
+        PENDING_KETUA:        '#f59e0b',
+        REJECTED_KETUA:       '#ef4444',
+        APPROVED:             '#22c55e',
+        CANCELLED:            '#374151',
+        PURCHASING:           '#3b82f6',
+        PARTIALLY_PURCHASED:  '#8b5cf6',
+        COMPLETED:            '#10b981',
+    };
+
+    const STATUS_LABELS = {
+        DRAFT:                'Draft',
+        PENDING_BENDAHARA:    'Menunggu Bendahara',
+        REJECTED_BENDAHARA:   'Ditolak Bendahara',
+        PENDING_KETUA:        'Menunggu Ketua',
+        REJECTED_KETUA:       'Ditolak Ketua',
+        APPROVED:             'Disetujui',
+        CANCELLED:            'Dibatalkan',
+        PURCHASING:           'Dalam Pembelian',
+        PARTIALLY_PURCHASED:  'Sebagian Dibeli',
+        COMPLETED:            'Selesai',
+    };
 
     function getFilters() {
         const tahun    = document.getElementById('filter-tahun')?.value;
@@ -213,6 +280,12 @@
             if (el) el.innerHTML = spinnerHtml();
         });
         document.getElementById('cards-no-data').classList.add('hidden');
+
+        // Show chart loaders
+        document.getElementById('chart-bar-loading').classList.remove('hidden');
+        document.getElementById('chart-status-bar').classList.add('hidden');
+        document.getElementById('chart-line-loading').classList.remove('hidden');
+        document.getElementById('chart-biaya-line').classList.add('hidden');
     }
 
     function updateCards(data) {
@@ -232,21 +305,162 @@
             'Update ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
     }
 
+    function renderBarChart(chartData) {
+        const labels = chartData.map(m => m.label);
+
+        // Collect all unique statuses
+        const allStatuses = [...new Set(chartData.flatMap(m => Object.keys(m.data)))];
+
+        const datasets = allStatuses.map(status => ({
+            label:           STATUS_LABELS[status] ?? status,
+            data:            chartData.map(m => m.data[status] ?? 0),
+            backgroundColor: STATUS_COLORS[status] ?? '#94a3b8',
+            borderRadius:    3,
+            borderSkipped:   false,
+        }));
+
+        const canvas = document.getElementById('chart-status-bar');
+        document.getElementById('chart-bar-loading').classList.add('hidden');
+        canvas.classList.remove('hidden');
+
+        if (barChartInstance) barChartInstance.destroy();
+
+        barChartInstance = new Chart(canvas, {
+            type: 'bar',
+            data: { labels, datasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } },
+                    tooltip: { mode: 'index', intersect: false },
+                },
+                scales: {
+                    x: { stacked: true, grid: { display: false }, ticks: { font: { size: 10 } } },
+                    y: { stacked: true, beginAtZero: true, ticks: { stepSize: 1, font: { size: 10 } } },
+                },
+            },
+        });
+    }
+
+    function renderLineChart(chartData) {
+        // For line chart we need biaya per month — fetch from summary per month
+        // Use chart data total counts as proxy, but we need biaya data
+        // We'll fetch summary for each month in parallel
+        const tahun    = document.getElementById('filter-tahun')?.value;
+        const divisiEl = document.getElementById('filter-divisi');
+        const divisi   = divisiEl ? divisiEl.value : '';
+        const headers  = {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+        };
+
+        const months = [1,2,3,4,5,6,7,8,9,10,11,12];
+        const labels = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
+        const promises = months.map(bulan => {
+            const p = new URLSearchParams({ tahun, bulan });
+            if (divisi) p.set('divisi_id', divisi);
+            return fetch('{{ route('api.v1.purchase-requests.dashboard.summary') }}?' + p, { headers, credentials: 'same-origin' })
+                .then(r => r.json())
+                .then(j => j.data ?? { total_biaya_estimasi: 0, total_biaya_aktual: 0 });
+        });
+
+        Promise.all(promises).then(results => {
+            const estimasi = results.map(r => r.total_biaya_estimasi ?? 0);
+            const aktual   = results.map(r => r.total_biaya_aktual ?? 0);
+
+            const canvas = document.getElementById('chart-biaya-line');
+            document.getElementById('chart-line-loading').classList.add('hidden');
+            canvas.classList.remove('hidden');
+
+            if (lineChartInstance) lineChartInstance.destroy();
+
+            lineChartInstance = new Chart(canvas, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'Biaya Estimasi',
+                            data: estimasi,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59,130,246,0.08)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                        },
+                        {
+                            label: 'Biaya Aktual',
+                            data: aktual,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16,185,129,0.08)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: ctx => ctx.dataset.label + ': ' + fmtRupiah(ctx.parsed.y),
+                            },
+                        },
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                font: { size: 10 },
+                                callback: v => fmtRupiah(v),
+                            },
+                        },
+                    },
+                },
+            });
+        });
+    }
+
     async function loadDashboard() {
         showLoading();
 
         const params  = getFilters();
+        const tahun   = document.getElementById('filter-tahun')?.value;
         const headers = {
             'Accept': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
         };
 
-        try {
-            const res  = await fetch(summaryApiUrl + '?' + params, { headers, credentials: 'same-origin' });
-            const json = await res.json();
+        // Update year labels on charts
+        document.getElementById('chart-bar-year').textContent  = tahun;
+        document.getElementById('chart-line-year').textContent = tahun;
 
-            if (!json.error && json.data) {
-                updateCards(json.data);
+        try {
+            const [summaryRes, chartRes] = await Promise.all([
+                fetch('{{ route('api.v1.purchase-requests.dashboard.summary') }}?' + params, { headers, credentials: 'same-origin' }),
+                fetch(chartApiUrl + '?' + params, { headers, credentials: 'same-origin' }),
+            ]);
+
+            const summaryJson = await summaryRes.json();
+            const chartJson   = await chartRes.json();
+
+            if (!summaryJson.error && summaryJson.data) {
+                updateCards(summaryJson.data);
+            }
+
+            if (!chartJson.error && chartJson.data) {
+                renderBarChart(chartJson.data);
+                renderLineChart(chartJson.data);
             }
         } catch (err) {
             console.error('Dashboard load error:', err);

@@ -14,7 +14,7 @@ License: https://keenthemes.com/metronic/tailwind/docs/getting-started/license
 
 <head>
     <meta charset="utf-8">
-    <title> Rumio - {{ 'Signin' ?? 'Karawang' }} </title>
+    <title> YMDS {{ 'Signin' ?? 'Karawang' }} </title>
     <base href="/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex">
@@ -22,10 +22,10 @@ License: https://keenthemes.com/metronic/tailwind/docs/getting-started/license
     <meta name="googlebot" content="noindex">
     <meta name="author" content="Eryan Fauzan">
     <meta name="description" content="RAB YMDS KARAWANG">
-    <link rel="icon" type="image/png" href="{{ asset('storage/logo.jpeg') }}" sizes="48x48" />
-    <link rel="icon" type="image/svg+xml" href="{{ asset('storage/logo.jpeg') }}" />
-    <link rel="shortcut icon" href="{{ asset('storage/logo.jpeg') }}" />
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('storage/logo.jpeg') }}" />
+    <link rel="icon" type="image/png" href="{{ asset('storage/logo.png') }}" sizes="48x48" />
+    <link rel="icon" type="image/svg+xml" href="{{ asset('storage/logo.png') }}" />
+    <link rel="shortcut icon" href="{{ asset('storage/logo.png') }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('storage/logo.png') }}" />
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
     @vite('resources/css/app.scss')

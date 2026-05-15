@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>rumio - {{ $category->name }}</title>
-    <meta name="description" content="rumio - Semua tercatat & transparan">
+    <title>YMDS {{ $category->name }}</title>
+    <meta name="description" content="YMDS Semua tercatat & transparan">
     <meta name="author" content="Eryan Fauzan">
 
     <link rel="icon" type="image/jpeg" href="{{ asset('storage/logo.png') }}">
